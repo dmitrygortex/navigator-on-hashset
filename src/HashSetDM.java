@@ -115,7 +115,7 @@ public class HashSetDM<T> {
     }
 
     public Iterable<T> iterator() {
-        LinkedList<T> valuesList = new LinkedList<>();
+        var valuesList = new LinkedList<T>();
         for (var bucket : buckets) {
             valuesList.addAll(bucket);
         }

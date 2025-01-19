@@ -49,6 +49,7 @@ public class NavigatorImpl implements Navigator {
                 return route;
             }
         }
+        return null;
     }
 
     @Override
