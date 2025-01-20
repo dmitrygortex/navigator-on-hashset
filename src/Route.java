@@ -85,7 +85,6 @@ public class Route {
     @Override
     public int hashCode() {
         return Objects.hash(
-                id,
                 distance,
                 popularity,
                 isFavorite,

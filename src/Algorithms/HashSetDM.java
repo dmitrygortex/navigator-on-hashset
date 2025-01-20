@@ -77,6 +77,7 @@ public class HashSetDM<T> {
     public void add(T val) {
         //проверяю в навигаторе но на всякий случай мало ли еще будет где то использоваться
         if (contains(val)) {
+            System.out.println(val.toString() + " уже был добавлен");
             return;
         }
 

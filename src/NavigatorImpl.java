@@ -112,7 +112,7 @@ public class NavigatorImpl implements Navigator {
             var points = route.getLocationPoints();
             if (route.isFavorite() &&
                     points.contains(destinationPoint) &&
-                    !points.getFirst().equals(destinationPoint)) {
+                    points.getLast().equals(destinationPoint)) {
                 result.add(route);
             }
         }
