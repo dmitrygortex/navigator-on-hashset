@@ -1,44 +1,52 @@
-
+import Algorithms.HashSetDM;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        HashSetDM<String> set = new HashSetDM<>();
+        HashSetDM<Route> routeHashSet = new HashSetDM<>();
 
-        set.add("New York");
-        set.add("Los Angeles");
-        set.add("Los Angeles");
-        set.add("Los Angeles");
-        set.add("Los Angeles");
-        set.add("Los 33333");
-        set.add("Los 2");
-        set.add("Los 33233333");
-        set.add("Los 23");
-        set.add("Los 332332333");
-        set.add("Los 21");
-        set.add("Los 332433333");
-        set.add("Chicago");
+        NavigatorImpl navigator = new NavigatorImpl(routeHashSet);
 
-        set.add("Chicago");
+        Route route1 = new Route(15.5, 100, true, Arrays.asList("Москва", "Санкт-Петербург"));
+        Route route2 = new Route(8.3, 50, false, Arrays.asList("Казань", "Уфа"));
+        Route route3 = new Route(20.0, 120, true, Arrays.asList("Сочи", "Краснодар"));
+        Route route4 = new Route(5.0, 30, false, Arrays.asList("Новосибирск", "Барнаул"));
+        Route route5 = new Route(25.0, 200, true, Arrays.asList("Екатеринбург", "Челябинск"));
 
-        set.add("Chicago");
+        navigator.addRoute(route1);
+        navigator.addRoute(route2);
+        navigator.addRoute(route3);
+        navigator.addRoute(route4);
+        navigator.addRoute(route5);
 
-        System.out.println("Contains 'Chicago': " + set.contains("Chicago")); // true
-        System.out.println("Set size: " + set.size()); // 3
+        // добавить маршрут, который уже существует
+        navigator.addRoute(route1);
 
-        set.remove("Chicago");
-        System.out.println("Contains 'Chicago': " + set.contains("Chicago")); // false
-        System.out.println("Set size: " + set.size()); // 2
-
-        for (String city : set.iterator()) {
-            System.out.println(city);
+        System.out.println("\nВсе маршруты:");
+        for (Route route : routeHashSet.iterator()) {
+            System.out.println("ID: " + route.getId() + ", Дистанция: " + route.getDistance() +
+                    ", Популярность: " + route.getPopularity() + ", Избранное: " + route.isFavorite());
         }
-        System.out.println(set.getBucketsCount());
 
+        System.out.println("\nСодержит ли маршрут route2? " + navigator.contains(route2));
 
-        System.out.println("__");
-        System.out.println((-2147483648 & 0x7FFFFFFF));
-        System.out.println((-2147483647 & 0x7FFFFFFF));
-        System.out.println((-2147483646 & 0x7FFFFFFF));
-        System.out.println((-214 & 0x7FFFFFFF % 4));
+        navigator.removeRoute(route2.getId());
+
+        navigator.chooseRoute(route3.getId());
+
+        System.out.println("\nМаршруты из 'Москва' в 'Санкт-Петербург':");
+        for (Route route : navigator.searchRoutes("Москва", "Санкт-Петербург")) {
+            System.out.println(route.getId());
+        }
+
+        System.out.println("\nТоп-5 маршрутов:");
+        for (Route route : navigator.getTop5Routes()) {
+            System.out.println("ID: " + route.getId() + ", Популярность: " + route.getPopularity());
+        }
+
+        System.out.println("\nИзбранные маршруты с точкой 'Санкт-Петербург':");
+        for (Route route : navigator.getFavoriteRoutes("Санкт-Петербург")) {
+            System.out.println("ID: " + route.getId() + ", Избранное: " + route.isFavorite());
+        }
     }
 }

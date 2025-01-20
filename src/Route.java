@@ -1,3 +1,5 @@
+import Helpers.IdGenerator;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -17,8 +19,9 @@ public class Route {
     private List<String> locationPoints;
 
     public Route(double distance, int popularity, boolean isFavorite, List<String> locationPoints) {
-        //this.id = IdGenerator.generateId();
-        this.id = UUID.randomUUID().toString();
+        this.id = IdGenerator.generateId();
+        // если можно использовать то лучше этот, если нет то мой
+        //this.id = UUID.randomUUID().toString();
         this.distance = distance;
         this.popularity = popularity;
         this.isFavorite = isFavorite;

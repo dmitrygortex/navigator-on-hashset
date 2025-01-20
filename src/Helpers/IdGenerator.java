@@ -1,3 +1,5 @@
+package Helpers;
+
 public class IdGenerator {
     private static long idCounter = 0;
 

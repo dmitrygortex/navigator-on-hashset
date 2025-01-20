@@ -1,5 +1,6 @@
+import Algorithms.HashSetDM;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class NavigatorImpl implements Navigator {
 
@@ -16,7 +17,7 @@ public class NavigatorImpl implements Navigator {
         }
         else {
             routes.add(route);
-            System.out.print("Маршрут " + route.getId() + " добавлен");
+            System.out.print("Маршрут " + route.getId() + " добавлен\n");
         }
     }
 
@@ -66,33 +67,81 @@ public class NavigatorImpl implements Navigator {
 
     @Override
     public Iterable<Route> searchRoutes(String startPoint, String endPoint) {
-        var routesFavorite = new ArrayList<Route>();
-        var routesOther = new ArrayList<Route>();
+//        var routesFavorite = new ArrayList<Route>();
+//        var routesOther = new ArrayList<Route>();
+//        for (var route : routes.iterator()) {
+//            var locationList = route.getLocationPoints();
+//            if (locationList.size() >= 2 &&
+//                locationList.getFirst().equals(startPoint) &&
+//                locationList.getLast().equals(endPoint)
+//            ) {
+//                if (route.isFavorite()){
+//                    routesFavorite.add(route);
+//                }
+//                else {
+//                    routesOther.add(route);
+//                }
+//            }
+//        }
+        var result = new ArrayList<Route>();
         for (var route : routes.iterator()) {
-            var locationList = route.getLocationPoints();
-            if (locationList.size() >= 2 &&
-                locationList.getFirst().equals(startPoint) &&
-                locationList.getLast().equals(endPoint)
-            ) {
-                if (route.isFavorite()){
-                    routesFavorite.add(route);
-                }
-                else {
-                    routesOther.add(route);
-                }
+            var points = route.getLocationPoints();
+            if (points.size() >= 2 &&
+                    points.getFirst().equals(startPoint) &&
+                    points.getLast().equals(endPoint)) {
+                result.add(route);
             }
         }
-
-        // TODO: доделать
+        result.sort((r1, r2) ->
+        {
+            if (r1.isFavorite() != r2.isFavorite()) {
+                return r1.isFavorite() ? -1 : 1;
+            }
+            int distanceComparison = Double.compare(r1.getDistance(), r2.getDistance());
+            return distanceComparison == 0
+                    ? Integer.compare(r2.getPopularity(), r1.getPopularity())
+                    : distanceComparison;
+        });
+        return result;
     }
 
     @Override
     public Iterable<Route> getFavoriteRoutes(String destinationPoint) {
-        return null;
+        var result = new ArrayList<Route>();
+        for (var route : routes.iterator()) {
+            var points = route.getLocationPoints();
+            if (route.isFavorite() &&
+                    points.contains(destinationPoint) &&
+                    !points.getFirst().equals(destinationPoint)) {
+                result.add(route);
+            }
+        }
+        result.sort((r1, r2) -> {
+            int distanceComparison = Double.compare(r1.getDistance(), r2.getDistance());
+            return distanceComparison == 0
+                    ? Integer.compare(r2.getPopularity(), r1.getPopularity())
+                    : distanceComparison;
+        });
+        return result;
     }
 
     @Override
     public Iterable<Route> getTop5Routes() {
-        return null;
+        var sortedRoutes = new ArrayList<Route>();
+        for (var route : routes.iterator()) {
+            sortedRoutes.add(route);
+        }
+        sortedRoutes.sort((r1, r2) -> {
+            int popularityComparison = Integer.compare(r2.getPopularity(), r1.getPopularity());
+            if (popularityComparison != 0) {
+                return popularityComparison;
+            }
+            int distanceComparison = Double.compare(r1.getDistance(), r2.getDistance());
+            if (distanceComparison != 0) {
+                return distanceComparison;
+            }
+            return Integer.compare(r1.getLocationPoints().size(), r2.getLocationPoints().size());
+        });
+        return sortedRoutes.subList(0, Math.min(5, sortedRoutes.size()));
     }
 }
